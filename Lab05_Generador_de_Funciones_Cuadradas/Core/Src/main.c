@@ -296,11 +296,19 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim);
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim->Instance == TIM4) // Validación para timer de 16bits
 	{
-
+		if (es_primera == 0)
+		{
+			v_cap1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+			es_primera = 1;
+		}
+		else
+		{
+			v_cap2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+		}
 	}
 }
 
