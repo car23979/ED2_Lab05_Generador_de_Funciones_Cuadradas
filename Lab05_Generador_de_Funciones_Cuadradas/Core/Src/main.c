@@ -113,11 +113,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // Formatear y enviar la frecuencia por UART2
-	  sprintf(msg, "Frecuencia: %.2f Hz \r\n", frecuencia);
-	  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+	  // Limpiar el buffer y formatear el mensaje con la frecuencia
+	        memset(msg, 0, sizeof(msg));
+	        sprintf(msg, "Frecuencia: %.2f Hz \r\n", frecuencia);
 
-	  HAL_Delay(500);	// Evitar Saturar la terminal
+	        // Transmitir por UART2
+	        HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+
+	        // Retardo para evitar saturar la terminal
+	        HAL_Delay(500);
 
     /* USER CODE END WHILE */
 
