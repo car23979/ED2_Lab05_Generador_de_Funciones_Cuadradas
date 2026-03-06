@@ -15,9 +15,14 @@
   *
   ******************************************************************************
   */
+/*
+ * Autor: David Carranza
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "stdio.h"
+#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
