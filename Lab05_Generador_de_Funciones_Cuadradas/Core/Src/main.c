@@ -106,7 +106,9 @@ int main(void)
   MX_TIM4_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  // Iniciar la captura de interrupciones para el canal 1 del TIM4
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);
+  char msg[60];	// Buffer para UART
   /* USER CODE END 2 */
 
   /* Infinite loop */
