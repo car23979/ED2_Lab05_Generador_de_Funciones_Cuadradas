@@ -115,8 +115,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+	  // Formatear y enviar la frecuencia por UART2
+	  sprintf(msg, "Frecuencia: %.2f Hz \r\n", frecuencia);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 
+	  HAL_Delay(500);	// Evitar Saturar la terminal
+
+    /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
