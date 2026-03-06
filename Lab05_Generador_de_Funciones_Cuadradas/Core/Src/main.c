@@ -24,7 +24,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,8 +106,8 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   // Iniciar la captura de interrupciones para el canal 1 del TIM4
-  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);
-  char msg[60];	// Buffer para UART
+  HAL_TIM_IC_Start_IT(&htim2	, TIM_CHANNEL_1);
+  char msg[64];	// Buffer para UART
   /* USER CODE END 2 */
 
   /* Infinite loop */
