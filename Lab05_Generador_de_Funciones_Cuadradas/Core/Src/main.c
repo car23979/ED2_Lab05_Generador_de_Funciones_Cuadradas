@@ -50,7 +50,14 @@ TIM_HandleTypeDef htim4;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+uint32_t v_cap1 = 0;
+uint32_t v_cap2 = 0;
+uint32_t diferencia = 0;
+uint32_t es_primera = 0;
+float frecuencia = 0;
 
+// Frecuencia base ocnfigura en CubeMX (84Mhz/ 84 Prescaler)
+uint32_t TIMER_FREQ = 1000000;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
