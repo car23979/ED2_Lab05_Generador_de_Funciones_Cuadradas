@@ -21,8 +21,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stdio.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -45,7 +43,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart2;
 
@@ -63,8 +61,8 @@ uint32_t TIMER_FREQ = 1000000;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_TIM4_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -103,8 +101,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM4_Init();
   MX_USART2_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   // Iniciar la captura de interrupciones para el canal 1 del TIM4
   HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_1);
@@ -122,6 +120,7 @@ int main(void)
 	  HAL_Delay(500);	// Evitar Saturar la terminal
 
     /* USER CODE END WHILE */
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -175,36 +174,36 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief TIM4 Initialization Function
+  * @brief TIM2 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_TIM4_Init(void)
+static void MX_TIM2_Init(void)
 {
 
-  /* USER CODE BEGIN TIM4_Init 0 */
+  /* USER CODE BEGIN TIM2_Init 0 */
 
-  /* USER CODE END TIM4_Init 0 */
+  /* USER CODE END TIM2_Init 0 */
 
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_IC_InitTypeDef sConfigIC = {0};
 
-  /* USER CODE BEGIN TIM4_Init 1 */
+  /* USER CODE BEGIN TIM2_Init 1 */
 
-  /* USER CODE END TIM4_Init 1 */
-  htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 83;
-  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 65535;
-  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_IC_Init(&htim4) != HAL_OK)
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 83;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_IC_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
   }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
@@ -212,13 +211,13 @@ static void MX_TIM4_Init(void)
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
   sConfigIC.ICFilter = 0;
-  if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
+  if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN TIM4_Init 2 */
+  /* USER CODE BEGIN TIM2_Init 2 */
 
-  /* USER CODE END TIM4_Init 2 */
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
@@ -298,18 +297,39 @@ static void MX_GPIO_Init(void)
 
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 {
-	if (htim->Instance == TIM4) // Validación para timer de 16bits
-	{
-		if (es_primera == 0)
-		{
-			v_cap1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-			es_primera = 1;
-		}
-		else
-		{
-			v_cap2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
-		}
-	}
+    if (htim->Instance == TIM2) // Validación para el timer de 32 bits
+    {
+        if (es_primera == 0)
+        {
+            // Se captura el primer flanco de subida
+            v_cap1 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+            es_primera = 1;
+        }
+        else
+        {
+            // Se captura el segundo flanco de subida
+            v_cap2 = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
+
+            // Manejo de la diferencia y el desbordamiento (Overflow) de 32 bits
+            if (v_cap2 > v_cap1)
+            {
+                diferencia = v_cap2 - v_cap1;
+            }
+            else if (v_cap2 < v_cap1)
+            {
+                diferencia = (0xFFFFFFFF - v_cap1) + v_cap2;
+            }
+
+            // Cálculo final de la frecuencia en Hertz
+            if (diferencia != 0)
+            {
+                frecuencia = (float)TIMER_FREQ / diferencia;
+            }
+
+            // Reiniciar bandera para la siguiente lectura
+            es_primera = 0;
+        }
+    }
 }
 
 /* USER CODE END 4 */
