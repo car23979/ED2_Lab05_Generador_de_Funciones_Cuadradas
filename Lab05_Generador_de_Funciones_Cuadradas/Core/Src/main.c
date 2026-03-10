@@ -114,6 +114,10 @@ int main(void)
   // Iniciar la captura de interrupciones para el canal 1 del TIM4
   HAL_TIM_IC_Start_IT(&htim2	, TIM_CHANNEL_1);
   char msg[64];	// Buffer para UART
+
+  HAL_TIM_Base_Start_IT(&htim3);	// Inicia timer para 250 ms
+  HAL_TIM_Base_Start_IT(&htim10);	// Inicia timer para 1s
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
