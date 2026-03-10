@@ -437,6 +437,22 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     }
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	//Lógica para señal de 500 ms (250 ms ON y 250 ms OFF)
+	if (htim -> == TIM3)
+	{
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0); // Cambia el estado del LED 1
+	}
+
+	// Lógica para la señal de un período de 2s (1s ON y 1s OFF)
+	if (htim -> Instance == TIM10);
+	{
+		HAL_GPIO_TogglePin(GPIOB, GPIO_Pin_1); // Cambia el estado del LED 2
+	}
+
+}
+
 /* USER CODE END 4 */
 
 /**
