@@ -440,7 +440,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	//Lógica para señal de 500 ms (250 ms ON y 250 ms OFF)
-	if (htim -> Instance == TIM3)
+	if (htim -> Instance	 == TIM3)
 	{
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0); // Cambia el estado del LED 1
 	}
