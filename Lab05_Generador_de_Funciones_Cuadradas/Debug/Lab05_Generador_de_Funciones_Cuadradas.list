@@ -2112,7 +2112,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
  8001444:	af00      	add	r7, sp, #0
  8001446:	6078      	str	r0, [r7, #4]
 	//Lógica para señal de 500 ms (250 ms ON y 250 ms OFF)
-	if (htim -> Instance == TIM3)
+	if (htim -> Instance	 == TIM3)
  8001448:	687b      	ldr	r3, [r7, #4]
  800144a:	681b      	ldr	r3, [r3, #0]
  800144c:	4a09      	ldr	r2, [pc, #36]	@ (8001474 <HAL_TIM_PeriodElapsedCallback+0x34>)
